@@ -1,0 +1,3 @@
+﻿  lotterySimulator.cpp
+c:\users\krzysztof\source\repos\lotterysimulator\lotterysimulator\lotterysimulator.cpp(75): warning C4244: 'initializing': conversion from 'time_t' to 'unsigned int', possible loss of data
+  lotterySimulator.vcxproj -> C:\Users\Krzysztof\source\repos\lotterySimulator\Debug\lotterySimulator.exe
