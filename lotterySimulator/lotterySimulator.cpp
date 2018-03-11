@@ -61,3 +61,68 @@
 
    End.
 */
+
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+
+const int NUMELEMS = 6;
+
+int main() {
+	int winningNumbers[NUMELEMS];
+	int numStubs;
+	int stubsChoice;
+	unsigned seed = time(0);
+	
+	srand(seed);
+
+	for (int i = 0; i < 5; i++) {
+		winningNumbers[i] = 1 + rand() % 70;
+		for (int j = 0; j < i; j++) {
+			while (winningNumbers[i] == winningNumbers[j]) {
+				winningNumbers[i] = 1 + rand() % 70;
+			}
+		}
+	}
+	winningNumbers[NUMELEMS - 1] = 1 + rand() % 25;
+
+	
+
+	std::cout << "How many stubs do you wish to purchase? Please note that we carrry a maximum of 100 stubs: ";
+	std::cin >> numStubs;
+	int playerStubs[100][NUMELEMS];
+
+	for (int m = 0; m < numStubs; m++) {
+		std::cout << "Would like you like to fill this stub by hand, or use the quickplay option? ";
+		std::cout << "Please choose 1 if by hand, or 2 if by quickplay: ";
+		std::cin >> stubsChoice;
+
+		while (stubsChoice != 1 && stubsChoice != 2) {
+			std::cout << "Please make a valid selection: ";
+			std::cin >> stubsChoice;
+		}
+
+		if (stubsChoice == 1) {
+			for (int n = 0; n < numStubs; n++) {
+				for (int o = 0; o < 5; o++) {
+					std::cout << "Please choose number " << o + 1 << ": ";
+					std::cin >> playerStubs[n][o];
+				}
+				std::cout << "Now choose between 1 - 25 for the final Mega Millions number: ";
+				std::cin >> playerStubs[n][5];
+				
+			}
+		}
+
+		for (int k = 0; k < numStubs; k++) {
+			for (int p = 0; p < NUMELEMS; p++) {
+				std::cout << playerStubs[k][p] << " ";
+			}
+			std::cout << std::endl;
+		}
+
+	}
+
+	system("pause");
+	return 0;
+}
