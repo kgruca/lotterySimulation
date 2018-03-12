@@ -65,63 +65,221 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
+#include <iomanip>
 
 const int NUMELEMS = 6;
+const int FINALNUM = 5;
 
 int main() {
 	int winningNumbers[NUMELEMS];
+	int playerStubs[100][NUMELEMS];
 	int numStubs;
 	int stubsChoice;
+	int count;
+	int secondCount;
+	int stubNumber;
+	int numberChoice;
+	int counter = 0;
+	int total = 0;
+	bool finalNumber = false;
 	unsigned seed = time(0);
 	
 	srand(seed);
 
-	for (int i = 0; i < 5; i++) {
-		winningNumbers[i] = 1 + rand() % 70;
-		for (int j = 0; j < i; j++) {
-			while (winningNumbers[i] == winningNumbers[j]) {
-				winningNumbers[i] = 1 + rand() % 70;
+	for (numberChoice = 0; numberChoice < NUMELEMS - 1; numberChoice++) {
+		winningNumbers[numberChoice] = 1 + rand() % 70;
+		for (count = 0; count < numberChoice; count++) {
+			if(winningNumbers[count] == winningNumbers[numberChoice]) {
+				winningNumbers[numberChoice] = 1 + rand() % 70;
 			}
 		}
 	}
-	winningNumbers[NUMELEMS - 1] = 1 + rand() % 25;
+	winningNumbers[FINALNUM] = 1 + rand() % 25;
+	std::cout << "\tWelcome to this Mega Millions simulator! I have generated winning" << std::endl;
+	std::cout << "\tlottery numbers, and now it's up to you to win! The grand prize" << std::endl;
+	std::cout << "\tis a whopping $1,000,000,000! Please bear in mind that the first" << std::endl;
+	std::cout << "\tfive numbers you choose must be between 1 - 70 and cannot repeat," << std::endl;
+	std::cout << "\twhile the last number must be between 1 - 25." << std::endl << std::endl; 
 
-	
-
-	std::cout << "How many stubs do you wish to purchase? Please note that we carrry a maximum of 100 stubs: ";
+	std::cout << "\tHow many stubs do you wish to purchase? Please note that we carry" << std::endl;
+	std::cout << "\ta maximum of 100 stubs: ";
 	std::cin >> numStubs;
-	int playerStubs[100][NUMELEMS];
 
-	for (int m = 0; m < numStubs; m++) {
-		std::cout << "Would like you like to fill this stub by hand, or use the quickplay option? ";
-		std::cout << "Please choose 1 if by hand, or 2 if by quickplay: ";
+	std::cout << std::endl << std::endl;
+
+	for (stubNumber = 0; stubNumber < numStubs; stubNumber++) {
+		std::cout << "\tWould like you like to fill this stub by hand, or use the" << std::endl;
+		std::cout << "\tquickplay option? Please choose 1 if by hand, or 2 if by" << std::endl;
+		std::cout << "\tquickplay: ";
 		std::cin >> stubsChoice;
 
+		std::cout << std::endl << std::endl; 
+
 		while (stubsChoice != 1 && stubsChoice != 2) {
-			std::cout << "Please make a valid selection: ";
+			std::cout << "\tPlease make a valid selection: ";
 			std::cin >> stubsChoice;
-		}
 
-		if (stubsChoice == 1) {
-			for (int n = 0; n < numStubs; n++) {
-				for (int o = 0; o < 5; o++) {
-					std::cout << "Please choose number " << o + 1 << ": ";
-					std::cin >> playerStubs[n][o];
-				}
-				std::cout << "Now choose between 1 - 25 for the final Mega Millions number: ";
-				std::cin >> playerStubs[n][5];
-				
-			}
-		}
-
-		for (int k = 0; k < numStubs; k++) {
-			for (int p = 0; p < NUMELEMS; p++) {
-				std::cout << playerStubs[k][p] << " ";
-			}
 			std::cout << std::endl;
 		}
 
+		if (stubsChoice == 1) {
+			for (numberChoice = 0; numberChoice < NUMELEMS - 1; numberChoice++) {
+				std::cout << "\tThis is stub " << stubNumber + 1 << ". Please choose number " << numberChoice + 1 << ": ";
+				std::cin >> playerStubs[stubNumber][numberChoice];
+
+				while (playerStubs[stubNumber][numberChoice] < 1 || playerStubs[stubNumber][numberChoice] > 70) {
+					std::cout << "\tPlease make a valid selection: ";
+					std::cin >> playerStubs[stubNumber][numberChoice];
+				}
+
+				for (count = 0; count < numberChoice; count++) {
+					if(playerStubs[stubNumber][count] == playerStubs[stubNumber][numberChoice]) {
+						std::cout << "\tYou have already chosen this number!" << std::endl;
+						std::cout << "\tPlease choose another: ";
+						std::cin >> playerStubs[stubNumber][numberChoice];
+					}
+				}
+			}
+			std::cout << "\tNow choose between 1 - 25 for the final Mega Millions" << std::endl;
+			std::cout << "number: ";
+			std::cin >> playerStubs[stubNumber][FINALNUM];
+
+			while (playerStubs[stubNumber][FINALNUM] < 1 || playerStubs[stubNumber][FINALNUM] > 25) {
+				std::cout << "\tPlease make a valid selection: ";
+				std::cin >> playerStubs[stubNumber][FINALNUM];
+			}
+
+			std::cout << std::endl << std::endl;
+		}
+		else {
+			for (numberChoice = 0; numberChoice < NUMELEMS - 1; numberChoice++) {
+				playerStubs[stubNumber][numberChoice] = 1 + rand() % 70;
+
+				for (count = 0; count < numberChoice; count++) {
+					if(playerStubs[stubNumber][count] == playerStubs[stubNumber][numberChoice]){
+						playerStubs[stubNumber][numberChoice] = 1 + rand() % 70;
+					}
+				}
+			}
+			playerStubs[stubNumber][FINALNUM] = 1 + rand() % 25;
+
+			std::cout << std::endl;
+		}
 	}
+
+	std::cout << "\tThank you for playing! I am now going to compare your numbers" << std::endl;
+	std::cout << "\tto the winning lottery numbers!" << std::endl << std::endl << std::endl << std::endl << std::endl;
+
+	std::cout << "\t********************************" << std::endl;
+	std::cout << "\tThe winning lottery numbers are:" << std::endl << std::endl;
+
+	std::cout << "\t";
+	for (count = 0; count < NUMELEMS; count++) {
+		std::cout << std::setw(3) << std::right << winningNumbers[count] << " ";
+	}
+	std::cout << "\n\t********************************" << std::endl;
+	std::cout << std::endl << std::endl << std::endl;
+
+	for (stubNumber = 0; stubNumber < numStubs; stubNumber++) {
+		std::cout << "\t----------------------------------------" << std::endl;
+		std::cout << "\tThis is what you have chosen for stub " << stubNumber + 1 << ":" << std::endl << std::endl;
+
+		std::cout << "\t";
+		for (numberChoice = 0; numberChoice < NUMELEMS; numberChoice++) {
+			std::cout << std::setw(3) << std::right << playerStubs[stubNumber][numberChoice] << " ";
+
+			if (playerStubs[stubNumber][numberChoice] == winningNumbers[numberChoice]) {
+				counter += 1;
+			}
+		}
+		std::cout << "\n\t----------------------------------------" << std::endl;
+		std::cout << std::endl;
+
+		if (playerStubs[stubNumber][FINALNUM] == winningNumbers[FINALNUM]) {
+			finalNumber = true;
+		}
+
+		switch (counter) {
+			case 0:
+				if (finalNumber) {
+					std::cout << "\tYou won $2!" << std::endl << std::endl;
+					total += 2;
+					std::cout << std::endl << std::endl << std::endl;
+					break;
+				}
+				else {
+					std::cout << "\tI'm sorry, you didn't win anything..." << std::endl << std::endl;
+					std::cout << std::endl << std::endl << std::endl;
+					break;
+				}
+			case 1:
+				if (finalNumber) {
+					std::cout << "\tYou won $4!" << std::endl << std::endl;
+					total += 4;
+					std::cout << std::endl << std::endl << std::endl;
+					break;
+				}
+				else {
+					std::cout << "\tI'm sorry, you didn't win anything..." << std::endl << std::endl;
+					std::cout << std::endl << std::endl << std::endl;
+					break;
+				}
+			case 2:
+				if (finalNumber) {
+					std::cout << "\tYou won $10!" << std::endl << std::endl;
+					total += 10;
+					std::cout << std::endl << std::endl << std::endl;
+					break;
+				}
+				else {
+					std::cout << "\tI'm sorry, you didn't win anything..." << std::endl << std::endl;
+					std::cout << std::endl << std::endl << std::endl;
+					break;
+				}
+			case 3:
+				if (finalNumber) {
+					std::cout << "\tYou won $200!" << std::endl << std::endl;
+					total += 200;
+					std::cout << std::endl << std::endl << std::endl;
+					break;
+				}
+				else {
+					std::cout << "\tYou won $10!" << std::endl << std::endl;
+					total += 10;
+					std::cout << std::endl << std::endl << std::endl;
+					break;
+				}
+			case 4:
+				if (finalNumber) {
+					std::cout << "\tYou won $10,000!" << std::endl << std::endl;
+					total += 10000;
+					std::cout << std::endl << std::endl << std::endl;
+					break;
+				}
+				else {
+					std::cout << "\tYou won $500!" << std::endl << std::endl;
+					total += 500;
+					std::cout << std::endl << std::endl << std::endl;
+					break;
+				}
+			case 5:
+				if (finalNumber) {
+					std::cout << "\tYOU WON THE JACKPOT!!!!!!" << std::endl << std::endl;
+					total += 1000000000;
+					std::cout << std::endl << std::endl << std::endl;
+					break;
+				}
+				else {
+					std::cout << "\tYou won $1,000,000!" << std::endl << std::endl;
+					total += 1000000;
+					std::cout << std::endl << std::endl << std::endl;
+					break;
+				}
+		}
+	}
+
+	std::cout << "\tYou won a grand total of $" << total << "! We hope you play again soon!";
+	std::cout << std::endl << std::endl << std::endl << std::endl << std::endl;
 
 	system("pause");
 	return 0;
