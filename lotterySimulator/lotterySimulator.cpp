@@ -53,11 +53,7 @@
 
    Display the winning numbers.
 
-   Display results. If user got any numbers correct on any of the stubs then display the stub 
-   number, the chosen numbers, and amount of correct choices, along with the winnings for the 
-   stub.
-
-   Display the total winnings.
+   Display results. Display the total winnings.
 
    End.
 */
@@ -65,10 +61,20 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
-#include <iomanip>
+#include <iomanip> 
 
 const int NUMELEMS = 6;
 const int FINALNUM = 5;
+
+void timeSeed();
+void lotteryNumbersPick(int[], int);
+void intro();
+int numberOfStubs();
+int fillOutChoice();
+void stubsChoiceValidation(int);
+void numberChoiceValidation(int [][NUMELEMS], int, int);
+void finalNumValidation(int [][NUMELEMS], int, int);
+
 
 int main() {
 	int winningNumbers[NUMELEMS];
@@ -82,72 +88,45 @@ int main() {
 	int counter = 0;
 	int total = 0;
 	bool finalNumber = false;
-	unsigned seed = time(0);
 	
-	srand(seed);
+	timeSeed();
 
-	for (numberChoice = 0; numberChoice < NUMELEMS - 1; numberChoice++) {
-		winningNumbers[numberChoice] = 1 + rand() % 70;
-		for (count = 0; count < numberChoice; count++) {
-			if(winningNumbers[count] == winningNumbers[numberChoice]) {
-				winningNumbers[numberChoice] = 1 + rand() % 70;
-			}
-		}
-	}
-	winningNumbers[FINALNUM] = 1 + rand() % 25;
-	std::cout << "\tWelcome to this Mega Millions simulator! I have generated winning" << std::endl;
-	std::cout << "\tlottery numbers, and now it's up to you to win! The grand prize" << std::endl;
-	std::cout << "\tis a whopping $1,000,000,000! Please bear in mind that the first" << std::endl;
-	std::cout << "\tfive numbers you choose must be between 1 - 70 and cannot repeat," << std::endl;
-	std::cout << "\twhile the last number must be between 1 - 25." << std::endl << std::endl; 
+	lotteryNumbersPick(winningNumbers, NUMELEMS);
+	
+	intro();
 
-	std::cout << "\tHow many stubs do you wish to purchase? Please note that we carry" << std::endl;
-	std::cout << "\ta maximum of 100 stubs: ";
-	std::cin >> numStubs;
-
-	std::cout << std::endl << std::endl;
+	numStubs = numberOfStubs();
 
 	for (stubNumber = 0; stubNumber < numStubs; stubNumber++) {
-		std::cout << "\tWould like you like to fill this stub by hand, or use the" << std::endl;
-		std::cout << "\tquickplay option? Please choose 1 if by hand, or 2 if by" << std::endl;
-		std::cout << "\tquickplay: ";
-		std::cin >> stubsChoice;
+		 
+		stubsChoice = fillOutChoice();
 
-		std::cout << std::endl << std::endl; 
-
-		while (stubsChoice != 1 && stubsChoice != 2) {
-			std::cout << "\tPlease make a valid selection: ";
-			std::cin >> stubsChoice;
-
-			std::cout << std::endl;
-		}
+		stubsChoiceValidation(stubsChoice);
 
 		if (stubsChoice == 1) {
 			for (numberChoice = 0; numberChoice < NUMELEMS - 1; numberChoice++) {
 				std::cout << "\tThis is stub " << stubNumber + 1 << ". Please choose number " << numberChoice + 1 << ": ";
 				std::cin >> playerStubs[stubNumber][numberChoice];
 
-				while (playerStubs[stubNumber][numberChoice] < 1 || playerStubs[stubNumber][numberChoice] > 70) {
-					std::cout << "\tPlease make a valid selection: ";
-					std::cin >> playerStubs[stubNumber][numberChoice];
-				}
+				numberChoiceValidation(playerStubs, stubNumber, numberChoice);
 
 				for (count = 0; count < numberChoice; count++) {
-					if(playerStubs[stubNumber][count] == playerStubs[stubNumber][numberChoice]) {
+					while(playerStubs[stubNumber][count] == playerStubs[stubNumber][numberChoice]) {
 						std::cout << "\tYou have already chosen this number!" << std::endl;
 						std::cout << "\tPlease choose another: ";
 						std::cin >> playerStubs[stubNumber][numberChoice];
+						numberChoiceValidation(playerStubs, stubNumber, numberChoice);
 					}
 				}
+
+				
+
 			}
 			std::cout << "\tNow choose between 1 - 25 for the final Mega Millions" << std::endl;
-			std::cout << "number: ";
+			std::cout << "\tnumber: ";
 			std::cin >> playerStubs[stubNumber][FINALNUM];
 
-			while (playerStubs[stubNumber][FINALNUM] < 1 || playerStubs[stubNumber][FINALNUM] > 25) {
-				std::cout << "\tPlease make a valid selection: ";
-				std::cin >> playerStubs[stubNumber][FINALNUM];
-			}
+			finalNumValidation(playerStubs, stubNumber, FINALNUM);
 
 			std::cout << std::endl << std::endl;
 		}
@@ -283,4 +262,77 @@ int main() {
 
 	system("pause");
 	return 0;
+}
+
+void timeSeed() {
+	unsigned seed = time(0);
+	srand(seed);
+}
+
+void lotteryNumbersPick(int arr[], int elems) {
+	for (int numberChoice = 0; numberChoice < elems - 1; numberChoice++) {
+		arr[numberChoice] = 1 + rand() % 70;
+		for (int count = 0; count < numberChoice; count++) {
+			if (arr[count] == arr[numberChoice]) {
+				arr[numberChoice] = 1 + rand() % 70;
+			}
+		}
+	}
+	arr[FINALNUM] = 1 + rand() % 25;
+}
+
+void intro() {
+	std::cout << "\tWelcome to this Mega Millions simulator! I have generated winning" << std::endl;
+	std::cout << "\tlottery numbers, and now it's up to you to win! The grand prize" << std::endl;
+	std::cout << "\tis a whopping $1,000,000,000! Please bear in mind that the first" << std::endl;
+	std::cout << "\tfive numbers you choose must be between 1 - 70 and cannot repeat," << std::endl;
+	std::cout << "\twhile the last number must be between 1 - 25." << std::endl << std::endl;
+}
+
+int numberOfStubs() {
+	int num;
+
+	std::cout << "\tHow many stubs do you wish to purchase? Please note that we carry" << std::endl;
+	std::cout << "\ta maximum of 100 stubs: ";
+	std::cin >> num;
+
+	std::cout << std::endl << std::endl;
+
+	return num;
+}
+
+int fillOutChoice() {
+	int stubsChoice;
+
+	std::cout << "\tWould like you like to fill this stub by hand, or use the" << std::endl;
+	std::cout << "\tquickplay option? Please choose 1 if by hand, or 2 if by" << std::endl;
+	std::cout << "\tquickplay: ";
+	std::cin >> stubsChoice;
+
+	std::cout << std::endl << std::endl;
+
+	return stubsChoice;
+}
+
+void stubsChoiceValidation(int stubsChoice) {
+	while (stubsChoice != 1 && stubsChoice != 2) {
+		std::cout << "\tPlease make a valid selection: ";
+		std::cin >> stubsChoice;
+
+		std::cout << std::endl;
+	}
+}
+
+void numberChoiceValidation(int arr[][NUMELEMS], int stubNumber, int numberChoice) {
+	while (arr[stubNumber][numberChoice] < 1 || arr[stubNumber][numberChoice] > 70) {
+		std::cout << "\tPlease make a valid selection: ";
+		std::cin >> arr[stubNumber][numberChoice];
+	}
+}
+
+void finalNumValidation(int arr[][NUMELEMS], int stubNumber, int numberChoice) {
+	while (arr[stubNumber][numberChoice] < 1 || arr[stubNumber][numberChoice] > 25) {
+		std::cout << "\tPlease make a valid selection: ";
+		std::cin >> arr[stubNumber][numberChoice];
+	}
 }
