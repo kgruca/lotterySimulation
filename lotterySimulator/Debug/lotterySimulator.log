@@ -1,4 +1,4 @@
 ﻿  lotterySimulator.cpp
-c:\users\krzysztof\source\repos\lotterysimulator\lotterysimulator\lotterysimulator.cpp(88): warning C4101: 'secondCount': unreferenced local variable
-c:\users\krzysztof\source\repos\lotterysimulator\lotterysimulator\lotterysimulator.cpp(268): warning C4244: 'initializing': conversion from 'time_t' to 'unsigned int', possible loss of data
-c:\users\krzysztof\source\repos\lotterysimulator\lotterysimulator\lotterysimulator.cpp(326): error C2065: 'playerStubs': undeclared identifier
+c:\users\krzysztof\source\repos\lotterysimulator\lotterysimulator\lotterysimulator.cpp(93): warning C4101: 'numberChoice': unreferenced local variable
+c:\users\krzysztof\source\repos\lotterysimulator\lotterysimulator\lotterysimulator.cpp(127): warning C4244: 'initializing': conversion from 'time_t' to 'unsigned int', possible loss of data
+  lotterySimulator.vcxproj -> C:\Users\Krzysztof\source\repos\lotterySimulator\Debug\lotterySimulator.exe
