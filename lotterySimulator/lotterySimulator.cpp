@@ -63,9 +63,12 @@
 #include <ctime>
 #include <iomanip> 
 
+// const values to hold # of bubbles to fill out per lottery ticket (6) and
+// the array position of the 6th number 
 const int NUMELEMS = 6;
 const int FINALNUM = 5;
 
+// function declarations
 void timeSeed();
 void lotteryNumbersPick(int[], int);
 void intro();
@@ -86,14 +89,21 @@ void totalWinnings(int);
 
 
 int main() {
+	// int array to hold the winning lottery numbers
 	int winningNumbers[NUMELEMS];
+	// int array to hold player's number choices
 	int playerStubs[100][NUMELEMS];
+	// int to hold number of stubs player wishes to get
 	int numStubs;
+	// stub number for loops
 	int stubNumber;
-	int numberChoice;
+	// counter
 	int counter = 0;
+	// decide player winnings based on the value of counter
 	int finalCounter;
+	// total player winnings
 	int total;
+	// did player guess the 6th number correctly?
 	bool finalNumber;
 	
 	timeSeed();
@@ -123,11 +133,13 @@ int main() {
 	return 0;
 }
 
+// seed for random number generators in later functions
 void timeSeed() {
 	unsigned seed = time(0);
 	srand(seed);
 }
 
+// randomly generated lottery numbers to be stored in array winningNumbers
 void lotteryNumbersPick(int arr[], int elems) {
 	for (int numberChoice = 0; numberChoice < elems - 1; numberChoice++) {
 		arr[numberChoice] = 1 + rand() % 70;
@@ -140,6 +152,7 @@ void lotteryNumbersPick(int arr[], int elems) {
 	arr[FINALNUM] = 1 + rand() % 25;
 }
 
+// describe the program to the user and rules
 void intro() {
 	std::cout << "\tWelcome to this Mega Millions simulator! I have generated winning" << std::endl;
 	std::cout << "\tlottery numbers, and now it's up to you to win! The grand prize" << std::endl;
@@ -148,6 +161,7 @@ void intro() {
 	std::cout << "\twhile the last number must be between 1 - 25." << std::endl << std::endl;
 }
 
+//ask user for how many stubs they wish to purchase, stored into numStubs variable
 int numberOfStubs() {
 	int num;
 
@@ -160,6 +174,7 @@ int numberOfStubs() {
 	return num;
 }
 
+// does user want to fill out stub by hand or generate their numbers randomly for the stub
 int fillOutChoice() {
 	int stubsChoice;
 
@@ -173,6 +188,7 @@ int fillOutChoice() {
 	return stubsChoice;
 }
 
+// user choice validation for stubsChoice
 void stubsChoiceValidation(int stubsChoice) {
 	while (stubsChoice != 1 && stubsChoice != 2) {
 		std::cout << "\tPlease make a valid selection: ";
@@ -182,6 +198,7 @@ void stubsChoiceValidation(int stubsChoice) {
 	}
 }
 
+// user choice validation for numberChoice
 void numberChoiceValidation(int arr[][NUMELEMS], int stubNumber, int numberChoice) {
 	while (arr[stubNumber][numberChoice] < 1 || arr[stubNumber][numberChoice] > 70) {
 		std::cout << "\tPlease make a valid selection: ";
@@ -189,6 +206,7 @@ void numberChoiceValidation(int arr[][NUMELEMS], int stubNumber, int numberChoic
 	}
 }
 
+// user choice validation for finalNum
 void finalNumValidation(int arr[][NUMELEMS], int stubNumber, int numberChoice) {
 	while (arr[stubNumber][numberChoice] < 1 || arr[stubNumber][numberChoice] > 25) {
 		std::cout << "\tPlease make a valid selection: ";
@@ -196,6 +214,7 @@ void finalNumValidation(int arr[][NUMELEMS], int stubNumber, int numberChoice) {
 	}
 }
 
+// if numberChoice value is valid, check to see if it hasn't been used yet
 void numberChoiceChosen(int arr[][NUMELEMS], int stubNumber, int numberChoice) {
 	for (int count = 0; count < numberChoice; count++) {
 		while (arr[stubNumber][count] == arr[stubNumber][numberChoice]) {
@@ -208,6 +227,7 @@ void numberChoiceChosen(int arr[][NUMELEMS], int stubNumber, int numberChoice) {
 	}
 }
 
+// get player's number choices for the stub
 void playerSelfPick(int arr[][NUMELEMS], int stubNumber) {
 	for (int numberChoice = 0; numberChoice < NUMELEMS - 1; numberChoice++) {
 		std::cout << "\tThis is stub " << stubNumber + 1 << ". Please choose number " << numberChoice + 1 << ": ";
@@ -226,6 +246,7 @@ void playerSelfPick(int arr[][NUMELEMS], int stubNumber) {
 	std::cout << std::endl << std::endl;
 }
 
+// generate random numbers if player chooses quickplay option
 void quickplayPick(int arr[][NUMELEMS], int stubNumber) {
 	for (int numberChoice = 0; numberChoice < NUMELEMS - 1; numberChoice++) {
 		arr[stubNumber][numberChoice] = 1 + rand() % 70;
@@ -241,6 +262,7 @@ void quickplayPick(int arr[][NUMELEMS], int stubNumber) {
 	std::cout << std::endl;
 }
 
+// compile previous functions into one
 void playerAllChoices(int arr[][NUMELEMS], int numStubs) {
 	for (int stubNumber = 0; stubNumber < numStubs; stubNumber++) {
 
@@ -257,6 +279,7 @@ void playerAllChoices(int arr[][NUMELEMS], int numStubs) {
 	}
 }
 
+// display the winning lottery numbers
 void displayWinningNums(int arr[], int elems) {
 	std::cout << "\tThank you for playing! I am now going to compare your numbers" << std::endl;
 	std::cout << "\tto the winning lottery numbers!" << std::endl << std::endl << std::endl << std::endl << std::endl;
@@ -272,6 +295,7 @@ void displayWinningNums(int arr[], int elems) {
 	std::cout << std::endl << std::endl << std::endl;
 }
 
+// display the player's choices for each stub
 int displayPlayerNums(int arr1[][NUMELEMS], int arr2[], int stubNumber, int counter) {
 	std::cout << "\t----------------------------------------" << std::endl;
 	std::cout << "\tThis is what you have chosen for stub " << stubNumber + 1 << ":" << std::endl << std::endl;
@@ -290,6 +314,7 @@ int displayPlayerNums(int arr1[][NUMELEMS], int arr2[], int stubNumber, int coun
 	return counter;
 }
 
+// check to see if finalNum is equal to final number chosen by user
 bool finalNumEqual(int arr1[][NUMELEMS], int arr2[], int stubNumber) {
 	bool finalNumber = false;
 
@@ -300,6 +325,7 @@ bool finalNumEqual(int arr1[][NUMELEMS], int arr2[], int stubNumber) {
 	return finalNumber;
 }
 
+// calculate and total $ won by user per stub
 int totalCalculator(int finalCounter, bool num) {
 	int total = 0;
 
@@ -383,7 +409,7 @@ int totalCalculator(int finalCounter, bool num) {
 
 	return total;
 }
-
+// show total winnings for all stubs
 void totalWinnings(int num) {
 	std::cout << "\tYou won a grand total of $" << num << "! We hope you play again soon!";
 	std::cout << std::endl << std::endl << std::endl << std::endl << std::endl;
